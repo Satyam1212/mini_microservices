@@ -1,11 +1,14 @@
 const express = require('express');
 const { randomBytes } = require('crypto');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const { default: axios } = require('axios');
 
 //make sure that we add in a body parser to make sure that whenever a user sends us some JSON data in the body, the request actually gets parsed.so it actually shows up appropriately inside of a request handler
 
 const app = express(); //create new app
 app.use(bodyParser.json());
+app.use(cors());
 
 //here we are not using any database
 //below one is kind of repository of post we created
@@ -25,6 +28,11 @@ app.post('/posts',(req, res) => {
     posts[id] = {
         id, title
     };
+    
+    axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+        
+    })
+
     //201 indicated we just created a resource
     res.status(201).send(posts[id])
     
