@@ -1,13 +1,13 @@
 const express = require('express');
 const { randomBytes } = require('crypto');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
-const { default: axios } = require('axios');
+const axios = require('axios');
 
 //make sure that we add in a body parser to make sure that whenever a user sends us some JSON data in the body, the request actually gets parsed.so it actually shows up appropriately inside of a request handler
 
 const app = express(); //create new app
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
 //here we are not using any database
@@ -20,7 +20,7 @@ app.get('/posts',(req, res) => {
 
 })
 
-app.post('/posts',(req, res) => {
+app.post('/posts',async(req, res) => {
     //when someone wants to create post then we will randomly generated ID for that import randomByte
     const id = randomBytes(4).toString('hex');
     const { title } = req.body;
@@ -29,13 +29,24 @@ app.post('/posts',(req, res) => {
         id, title
     };
     
-    axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
-        
+    await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+        type: 'PostCreated',
+        data: {
+            id, title
+        }
+    }).catch((err)=>{
+        console.log(err.message);
     })
 
     //201 indicated we just created a resource
     res.status(201).send(posts[id])
     
+})
+
+app.post('/events', (req, res) =>{
+    console.log('Received Event', req.body.type)
+
+    res.send({});
 })
 
 app.listen(4000, ()=>{

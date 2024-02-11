@@ -9,9 +9,7 @@ const PostCreate = () =>{
         //by default browser is going to try to submit that form itself
         event.preventDefault();
 
-        await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4000.app.github.dev/posts', { title }).catch((err)=>{
-            console.log(err.message);
-        });
+        await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4000.app.github.dev/posts', { title })
     
 
         //after creating post we want to blank out title 
