@@ -7,10 +7,10 @@ const PostList = () =>{
     const [posts, setPosts] = useState({});
 
     const fetchPosts = async() => {
-        const res = await axios.get('https://jubilant-umbrella-v7w79q9w9q3jp9-4000.app.github.dev/posts').catch((err)=>{
+        const res = await axios.get('https://jubilant-umbrella-v7w79q9w9q3jp9-4002.app.github.dev/posts').catch((err)=>{
             console.log(err.message);
         });
-
+        console.log(res.data)
         setPosts(res.data);
     }
 
@@ -27,7 +27,8 @@ const PostList = () =>{
         >
             <div className="card-body">
                 <h3>{post.title}</h3>
-                <CommentList postId={post.id}/>
+                {/* <CommentList postId={post.id}/> */}
+                <CommentList comments={post.comments}/>
                 <CommentCreate postId={post.id}/>
             </div>
         </div>

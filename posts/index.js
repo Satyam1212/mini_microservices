@@ -7,8 +7,8 @@ const axios = require('axios');
 //make sure that we add in a body parser to make sure that whenever a user sends us some JSON data in the body, the request actually gets parsed.so it actually shows up appropriately inside of a request handler
 
 const app = express(); //create new app
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 //here we are not using any database
 //below one is kind of repository of post we created
