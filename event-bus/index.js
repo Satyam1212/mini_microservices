@@ -9,14 +9,19 @@ app.use(express.json());
 
 app.post('/events', (req, res) =>{
     const event = req.body;
-
+    //post
     axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4000.app.github.dev/events', event).catch((err)=>{
         console.log(err.message)
     });
+    //comment
     axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4001.app.github.dev/events', event).catch((err)=>{
         console.log(err.message)
     });
+    //query
     axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4002.app.github.dev/events', event).catch((err)=>{
+        console.log(err.message)
+    });
+    axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', event).catch((err)=>{
         console.log(err.message)
     });
 
