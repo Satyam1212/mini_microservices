@@ -29,7 +29,7 @@ app.post('/posts',async(req, res) => {
         id, title
     };
     
-    await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+    await axios.post('http://localhost:4005/events', {
         type: 'PostCreated',
         data: {
             id, title

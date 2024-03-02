@@ -10,7 +10,7 @@ app.post('/events', async(req, res) => {
     if(type === 'CommentCreated'){
         const status = data.content.includes('orange') ? 'rejected': 'aprroved';
 
-        await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+        await axios.post('http://localhost:4005/events', {
             type: 'CommentModerated',
             data: {
                 id: data.id,

@@ -7,7 +7,7 @@ const CommentCreate = ({ postId }) => {
    const onSubmit = async (event) =>{
     event.preventDefault();
 
-    await axios.post(`https://jubilant-umbrella-v7w79q9w9q3jp9-4001.app.github.dev/posts/${postId}/comments`, {
+    await axios.post(`http://localhost:4001/posts/${postId}/comments`, {
         content
     }).catch((err)=>{
         console.log(err.message);

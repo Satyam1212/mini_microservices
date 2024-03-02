@@ -26,7 +26,7 @@ app.post('/posts/:id/comments',async (req, res) =>{
     
     commentsByPostId[req.params.id] = comments;
 
-    await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+    await axios.post('http://localhost:4005/events', {
         type: 'CommentCreated',
         data: {
             id: commentId,
@@ -57,7 +57,7 @@ app.post('/events', async(req, res) =>{
         comment.status = status;
 
 
-        await axios.post('https://jubilant-umbrella-v7w79q9w9q3jp9-4005.app.github.dev/events', {
+        await axios.post('http://localhost:4005/events', {
             type: 'CommentUpdated',
             data: {
                 id,

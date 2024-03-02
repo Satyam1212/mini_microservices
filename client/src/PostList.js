@@ -7,7 +7,7 @@ const PostList = () =>{
     const [posts, setPosts] = useState({});
 
     const fetchPosts = async() => {
-        const res = await axios.get('https://jubilant-umbrella-v7w79q9w9q3jp9-4002.app.github.dev/posts').catch((err)=>{
+        const res = await axios.get('http://localhost:4002/posts').catch((err)=>{
             console.log(err.message);
         });
         console.log(res.data)
