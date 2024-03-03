@@ -3,16 +3,17 @@ import axios from 'axios';
 import CommentCreate from "./CommentCreate";
 import CommentList from "./CommentList";
 
-const PostList = () =>{
+export default function PostList(){
     const [posts, setPosts] = useState({});
 
-    const fetchPosts = async() => {
-        const res = await axios.get('http://localhost:4002/posts').catch((err)=>{
-            console.log(err.message);
-        });
-        console.log(res.data)
-        setPosts(res.data);
-    }
+    const fetchPosts = async () => {
+        try {
+          const res = await axios.get('http://localhost:4002/posts');
+          setPosts(res.data);
+        } catch (error) {
+          setPosts([]);
+        }
+      };
 
     useEffect(()=>{
         fetchPosts();
@@ -20,7 +21,7 @@ const PostList = () =>{
     }, []); //empty array tells react that this function runs one in while
     console.log(posts);
 
-    const renderPosts = Object.values(posts).map(post => {
+    const renderPosts = Object.values(posts).map((post) => {
         return <div className="card"
         style={{width: '30%', marginBottom: '20px'}}
         key={post.id}
@@ -40,5 +41,3 @@ const PostList = () =>{
         </div>
     );
 }
-
-export default PostList;

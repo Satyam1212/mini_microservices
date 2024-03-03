@@ -1,7 +1,7 @@
 import React from "react";
 // import axios from "axios";
 
-const CommentList = ({comments})=>{
+export default function CommentList({comments}){
     // const [comments, setComments] = useState([]);
 
     // const fetchData = async () =>{
@@ -17,7 +17,7 @@ const CommentList = ({comments})=>{
     //   fetchData();
     // },[]);
 
-    const renderedComments = comments.map(comment =>{
+    const renderedComments = Object.values(comments).map(comment =>{
         let content;
 
         if(comment.status === 'approved'){
@@ -32,9 +32,6 @@ const CommentList = ({comments})=>{
             content = 'This comment has been rejected'
         }
 
-
-
-
         return <li key={comment.id}>{content}
         </li>
     })
@@ -43,5 +40,3 @@ const CommentList = ({comments})=>{
         {renderedComments}
     </ul>)
 }
-
-export default CommentList;

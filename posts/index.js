@@ -1,54 +1,46 @@
 const express = require('express');
 const { randomBytes } = require('crypto');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const axios = require('axios');
 
-//make sure that we add in a body parser to make sure that whenever a user sends us some JSON data in the body, the request actually gets parsed.so it actually shows up appropriately inside of a request handler
-
-const app = express(); //create new app
+const app = express();
+app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json());
 
-//here we are not using any database
-//below one is kind of repository of post we created
 const posts = {};
 
-app.get('/posts',(req, res) => {
-    //whatever we post created that we directly sends here
+app.get('/posts', (req, res) => {
     res.send(posts);
+});
 
-})
-
-app.post('/posts',async(req, res) => {
-    //when someone wants to create post then we will randomly generated ID for that import randomByte
+app.post('/posts', async (req, res) => {
     const id = randomBytes(4).toString('hex');
     const { title } = req.body;
 
-    posts[id] = {
-        id, title
-    };
-    
-    await axios.post('http://localhost:4005/events', {
-        type: 'PostCreated',
-        data: {
-            id, title
-        }
-    }).catch((err)=>{
-        console.log(err.message);
-    })
+    posts[id] = { id, title };
 
-    //201 indicated we just created a resource
-    res.status(201).send(posts[id])
-    
-})
+    console.log('Post created:', { id, title }); // Log created post
 
-app.post('/events', (req, res) =>{
-    console.log('Received Event', req.body.type)
+    try {
+        // Emit a PostCreated event
+        await axios.post('http://localhost:4005/events', {
+            type: 'PostCreated',
+            data: { id, title }
+        });
+        console.log('PostCreated event sent successfully');
+    } catch (error) {
+        console.error('Error sending PostCreated event:', error.message);
+    }
 
+    res.status(201).send(posts[id]);
+});
+
+app.post('/events', (req, res) => {
+    console.log('Received Event:', req.body.type);
     res.send({});
-})
+});
 
-app.listen(4000, ()=>{
-    console.log("Listening on 4000")
-})
+app.listen(4000, () => {
+    console.log("Listening on port 4000");
+});

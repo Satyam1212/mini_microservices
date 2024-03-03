@@ -1,75 +1,73 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
 app.use(cors());
 
-const posts = {}
+const posts = {};
 
-//Quick example
-// posts === {
-//     'j123j42':{
-//         id: 'j123j42',
-//         title: 'post ttle',
-//         comments: [
-//             { id: 'klj3kl', content: 'comment'
-//         }
-//         ]
-//     }
-//     'j123j42':{
-//         id: 'j123j42',
-//         title: 'post ttle',
-//         comments: [
-//             { id: 'klj3kl', content: 'comment'
-//         }
-//         ]
-//     }
-// }
+const handleEvent = (type, data) => {
+    console.log('Received Event:', type, data); // Log received event
 
-app.get('/posts', (req, res) =>{
+    if (type === 'PostCreated') {
+        const { id, title } = data;
+        console.log('Creating new post:', { id, title });
+        posts[id] = { id, title, comments: [] };
+    }
+
+    if (type === 'CommentCreated') {
+        const { id, content, postId, status } = data;
+        console.log('Creating new comment:', { id, content, postId, status });
+
+        if (posts[postId]) {
+            posts[postId].comments.push({ id, content, status });
+        } else {
+            console.error('Post not found for comment:', postId);
+        }
+    }
+
+    if (type === 'CommentUpdated') {
+        const { id, content, postId, status } = data;
+        console.log('Updating comment:', { id, content, postId, status });
+
+        const post = posts[postId];
+        if (post) {
+            const comment = post.comments.find(comment => comment.id === id);
+            if (comment) {
+                comment.content = content;
+                comment.status = status;
+            } else {
+                console.error('Comment not found:', id);
+            }
+        } else {
+            console.error('Post not found for comment:', postId);
+        }
+    }
+};
+
+app.get('/posts', (req, res) => {
     res.send(posts);
+});
 
-})
+app.post('/events', (req, res) => {
+    const { type, data } = req.body;
+    handleEvent(type, data);
+    res.send({});
+});
 
-app.post('/events', (req, res) =>{
-    const {type, data} = req.body;
-
-    if (type === 'PostCreated'){
-        const { id, title} = data;
-
-        posts[id] = { id, title, comments: []}
-
+app.listen(4002, async () => {
+    console.log('Listening on port 4002');
+    try {
+        const response = await axios.get('http://localhost:4005/events');
+        const events = response.data;
+        for (const event of events) {
+            console.log('Processing Event:', event.type);
+            handleEvent(event.type, event.data);
+        }
+    } catch (error) {
+        console.error('Error fetching events:', error.message);
     }
-
-    if (type === 'CommentCreated'){
-        const { id, content, postId} = data;
-
-        const post = posts[postId];
-
-        post.comments.push({id, content, status });
-
-    }
-
-    if( type === 'CommentUpdated'){
-        const {id, content, postId, status } = data;
-
-        const post = posts[postId];
-
-        const comment = post.comments.find(comment => {
-            return comment.id === id;
-        })
-
-        comment.status = status;
-        comment.content = content; 
-    }
-    
-    console.log(posts)
-    res.send({})
-    
-})
-
-app.listen(4002,() => {
-    console.log("Listening on 4002")
 });
