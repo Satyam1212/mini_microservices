@@ -1,24 +1,24 @@
-import React from "react";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-export default function CommentList({comments}){
-    // const [comments, setComments] = useState([]);
+const CommentList = ({ postId }) => {
+  const [comments, setComments] = useState([]);
 
-    // const fetchData = async () =>{
-    //     const res = await axios.get(`https://jubilant-umbrella-v7w79q9w9q3jp9-4001.app.github.dev/posts/${postId}/comments`).catch((err)=>{
-    //         console.log(err.message);
-    //     });
-    
+  const fetchData = async () => {
+    const res = await axios.get(
+      `http://localhost:4001/posts/${postId}/comments`
+    );
 
-    //     setComments(res.data);
-    // }
-    
-    // useEffect(() => {
-    //   fetchData();
-    // },[]);
+    setComments(res.data);
+  };
+  
+  // eslint-disable-next-line 
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const renderedComments = Object.values(comments).map(comment =>{
-        let content;
+  const renderedComments = Object.values(comments).map((comment) => {
+    let content;
 
         if(comment.status === 'approved'){
             content = comment.content;
@@ -31,12 +31,10 @@ export default function CommentList({comments}){
         if(comment.status === 'rejected'){
             content = 'This comment has been rejected'
         }
+        return <li key={comment.id}>{comment.content}</li>;
+  });
 
-        return <li key={comment.id}>{content}
-        </li>
-    })
+  return <ul>{renderedComments}</ul>;
+};
 
-    return (<ul>
-        {renderedComments}
-    </ul>)
-}
+export default CommentList;
